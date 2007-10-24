@@ -1,5 +1,7 @@
+#TODO: the latest dlxlinux release dates from 2001, drop it?
+
 %define name	bochs
-%define version	2.3
+%define version	2.3.5
 %define release %mkrel 1
 
 Summary:	Bochs Project x86 PC Emulator
@@ -9,7 +11,7 @@ Release:	%{release}
 License:	LGPL
 Group:		Emulators
 URL:		http://bochs.sourceforge.net/
-Source0:	http://ovh.dl.sourceforge.net/sourceforge/bochs/%{name}-%{version}.tar.bz2
+Source0:	http://ovh.dl.sourceforge.net/sourceforge/bochs/%{name}-%{version}.tar.gz
 Source1:	dlxlinux4.tar.bz2
 BuildRequires:	X11-devel 
 BuildRequires:  readline-devel 
@@ -52,7 +54,15 @@ perl -pi -e "s#/usr/local/bochs/latest#%{_datadir}/bochs#g" dlxlinux/bochsrc.txt
 	--without-wx \
 	--without-sdl \
 	--enable-readline \
-	--disable-docbook
+	--disable-docbook \
+	--enable-disasm \
+	--enable-smp \
+	--enable-debugger \
+	--enable-4meg-pages \
+	--enable-global-pages \
+	--enable-pae \
+	--with-all-libs
+
 %make
 
 %install
@@ -106,6 +116,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/bochs/dlxlinux/testform.txt
 %{_mandir}/man1/bochs-dlx.1*
 %{_bindir}/bochs-dlx
-
-
-
