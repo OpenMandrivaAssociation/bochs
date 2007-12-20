@@ -15,6 +15,7 @@ Source0:	http://ovh.dl.sourceforge.net/sourceforge/bochs/%{name}-%{version}.tar.
 Source1:	dlxlinux4.tar.bz2
 BuildRequires:	X11-devel 
 BuildRequires:  readline-devel 
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 Bochs is a portable x86 PC emulation software package that emulates
