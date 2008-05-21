@@ -1,18 +1,18 @@
 #TODO: the latest dlxlinux release dates from 2001, drop it?
 
-%define name	bochs
-%define version	2.3.5
-%define release %mkrel 1
-
 Summary:	Bochs Project x86 PC Emulator
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
-License:	LGPL
+Name:		bochs
+Version:	2.3.6
+Release:	%mkrel 1
+License:	LGPLv2+
 Group:		Emulators
 URL:		http://bochs.sourceforge.net/
-Source0:	http://ovh.dl.sourceforge.net/sourceforge/bochs/%{name}-%{version}.tar.gz
-Source1:	dlxlinux4.tar.bz2
+Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Source1:	http://bochs.sourceforge.net/guestos/dlxlinux4.tar.gz
+Patch0:         %{name}-nonet-build.patch
+Patch1:         %{name}-config.patch
+Patch2:         %{name}-wx28.patch
+Patch3:         bochs-2.3.6-gcc43.patch
 BuildRequires:	X11-devel 
 BuildRequires:  readline-devel 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -33,7 +33,12 @@ enough of the x86 CPU, related AT hardware, and BIOS to run DOS,
 Windows '95, Minix 2.0, and other OS's, all on your workstation.
 
 %prep
-%setup -q -a1 -n %{name}-%{version}
+
+%setup -q -n %{name}-%{version} -a1
+%patch0 -p0 -z .nonet
+%patch2 -p1 -z .wx28
+%patch3 -p1 -z .gcc43
+
 # remove any references to CVS repository
 find . -type d -name CVS | xargs rm -rf
 perl -pi -e "s#1\.1\.2#2\.0\.2#g" dlxlinux/bochsrc.txt
