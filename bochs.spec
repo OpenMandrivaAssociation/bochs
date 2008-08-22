@@ -1,18 +1,14 @@
-#TODO: the latest dlxlinux release dates from 2001, drop it?
-
 Summary:	Bochs Project x86 PC Emulator
 Name:		bochs
-Version:	2.3.6
-Release:	%mkrel 3
+Version:	2.3.8
+%define	cvs	20080822
+Release:	%mkrel 0.%{cvs}.1
 License:	LGPLv2+
 Group:		Emulators
 URL:		http://bochs.sourceforge.net/
-Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-Source1:	http://bochs.sourceforge.net/guestos/dlxlinux4.tar.gz
+Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}-%{cvs}.tar.lzma
 Patch0:         %{name}-nonet-build.patch
 Patch1:         %{name}-config.patch
-Patch2:         %{name}-wx28.patch
-Patch3:         bochs-2.3.6-gcc43.patch
 BuildRequires:	X11-devel 
 BuildRequires:  readline-devel 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -22,22 +18,9 @@ Bochs is a portable x86 PC emulation software package that emulates
 enough of the x86 CPU, related AT hardware, and BIOS to run DOS,
 Windows '95, Minix 2.0, and other OS's, all on your workstation.
 
-%package	dlxlinux
-Summary: 	Small GNU/Linux distrib for Bochs project x86 PC emulator
-Group:          Emulators
-Requires:	%{name}
-
-%description	dlxlinux
-Bochs is a portable x86 PC emulation software package that emulates
-enough of the x86 CPU, related AT hardware, and BIOS to run DOS,
-Windows '95, Minix 2.0, and other OS's, all on your workstation.
-
 %prep
-
-%setup -q -n %{name}-%{version} -a1
+%setup -q
 %patch0 -p0 -z .nonet
-%patch2 -p1 -z .wx28
-%patch3 -p1 -z .gcc43
 
 # remove any references to CVS repository
 find . -type d -name CVS | xargs rm -rf
@@ -45,14 +28,18 @@ perl -pi -e "s#1\.1\.2#2\.0\.2#g" dlxlinux/bochsrc.txt
 perl -pi -e "s#/usr/local/bochs/latest#%{_datadir}/bochs#g" dlxlinux/bochsrc.txt
 
 %build
-
 %configure \
 	--enable-sb16=linux \
 	--enable-ne2000 \
 	--enable-cdrom \
 	--enable-vbe \
 	--enable-split-hd \
-	--enable-x86-64 --enable-sse=2 \
+	--enable-x86-64 --enable-sse=4 \
+	--enable-sse-extension \
+	--enable-misaligned-sse \
+	--enable-mmx \
+	--enable-3dnow \
+	--enable-fpu \
 	--enable-all-optimizations \
 	--with-x11 \
 	--with-nogui \
@@ -62,29 +49,42 @@ perl -pi -e "s#/usr/local/bochs/latest#%{_datadir}/bochs#g" dlxlinux/bochsrc.txt
 	--disable-docbook \
 	--enable-disasm \
 	--enable-smp \
+	--enable-apic \
 	--enable-debugger \
-	--enable-4meg-pages \
+	--enable-large-pages \
 	--enable-global-pages \
 	--enable-pae \
-	--with-all-libs
+	--enable-xsave \
+	--enable-aes \
+	--enable-popcnt \
+	--enable-usb \
+	--enable-acpi \
+	--enable-pci \
+	--enable-pcidev \
+	--enable-idle-hack \
+	--enable-repeat-speedups \
+	--enable-icache \
+	--enable-trace-cache \
+	--enable-fast-function-calls \
+	--enable-port-e9-hack \
+	--enable-mtrr \
+	--enable-guest2host-tlb \
+	--enable-alignment-check \
+	--enable-sep
 
 %make
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%makeinstall install_dlx
+%makeinstall
 
 # fix docs
 install -m644 $RPM_BUILD_ROOT%{_datadir}/doc/bochs/bochsrc-sample.txt .
 rm -rf $RPM_BUILD_ROOT%{_datadir}/doc
+rm -f %{buildroot}%{_mandir}/man*/*dlx*
 
 install -m644 gui/keymaps/convertmap.pl -D $RPM_BUILD_ROOT%{_datadir}/bochs/keymaps/convertmap.pl
-
-%preun dlxlinux
-# clean up the bochsout.txt that is always produced if you 
-# run bochs-dlx.
-rm -rf %{_datadir}/bochs/dlxlinux/bochsout.txt core
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -110,14 +110,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/bximage.1*
 %{_mandir}/man1/bxcommit.1*
 %{_mandir}/man5/bochsrc.5*
-
-%files dlxlinux
-%defattr(-, root, root)
-
-%dir %{_datadir}/bochs/dlxlinux
-%{_datadir}/bochs/dlxlinux/readme.txt
-%{_datadir}/bochs/dlxlinux/bochsrc.txt
-%{_datadir}/bochs/dlxlinux/hd10meg.img.gz
-%{_datadir}/bochs/dlxlinux/testform.txt
-%{_mandir}/man1/bochs-dlx.1*
-%{_bindir}/bochs-dlx
