@@ -11,6 +11,7 @@ Patch0:         %{name}-nonet-build.patch
 Patch1:         %{name}-config.patch
 BuildRequires:	X11-devel 
 BuildRequires:  readline-devel 
+BuildRequires:	byacc
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
