@@ -2,7 +2,7 @@ Summary:	Bochs Project x86 PC Emulator
 Name:		bochs
 Version:	2.3.8
 %define	cvs	20080822
-Release:	%mkrel 0.%{cvs}.1
+Release:	%mkrel 0.%{cvs}.2
 License:	LGPLv2+
 Group:		Emulators
 URL:		http://bochs.sourceforge.net/
@@ -29,7 +29,8 @@ perl -pi -e "s#1\.1\.2#2\.0\.2#g" dlxlinux/bochsrc.txt
 perl -pi -e "s#/usr/local/bochs/latest#%{_datadir}/bochs#g" dlxlinux/bochsrc.txt
 
 %build
-%configure \
+%define Werror_cflags %nil
+%configure2_5x \
 	--enable-sb16=linux \
 	--enable-ne2000 \
 	--enable-cdrom \
@@ -78,7 +79,7 @@ perl -pi -e "s#/usr/local/bochs/latest#%{_datadir}/bochs#g" dlxlinux/bochsrc.txt
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%makeinstall
+%makeinstall_std
 
 # fix docs
 install -m644 $RPM_BUILD_ROOT%{_datadir}/doc/bochs/bochsrc-sample.txt .
