@@ -2,7 +2,7 @@ Summary:	Bochs Project x86 PC Emulator
 Name:		bochs
 Version:	2.3.8
 %define	cvs	20080822
-Release:	%mkrel 0.%{cvs}.2
+Release:	%mkrel 0.%{cvs}.3
 License:	LGPLv2+
 Group:		Emulators
 URL:		http://bochs.sourceforge.net/
