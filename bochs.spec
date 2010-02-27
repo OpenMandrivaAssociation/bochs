@@ -66,8 +66,7 @@ Windows '95, Minix 2.0, and other OS's, all on your workstation.
 	--enable-long-phy-address \
 	--enable-a20-pin \
 	--enable-configurable-msrs \
-	--enable-host-specific-asms \
-	--enable-fast-function-calls
+	--enable-host-specific-asms
 
 %make
 
