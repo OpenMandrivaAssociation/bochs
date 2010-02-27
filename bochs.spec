@@ -1,15 +1,14 @@
 Summary:	Bochs Project x86 PC Emulator
 Name:		bochs
-Version:	2.3.8
-%define	cvs	20080822
-Release:	%mkrel 0.%{cvs}.3
+Version:	2.4.2
+Release:	%mkrel 1
 License:	LGPLv2+
 Group:		Emulators
 URL:		http://bochs.sourceforge.net/
-Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}-%{cvs}.tar.lzma
+Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Patch0:         %{name}-nonet-build.patch
 Patch1:         %{name}-config.patch
-BuildRequires:	X11-devel 
+BuildRequires:	X11-devel gtk+2-devel
 BuildRequires:  readline-devel 
 BuildRequires:	byacc
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -29,7 +28,6 @@ perl -pi -e "s#1\.1\.2#2\.0\.2#g" dlxlinux/bochsrc.txt
 perl -pi -e "s#/usr/local/bochs/latest#%{_datadir}/bochs#g" dlxlinux/bochsrc.txt
 
 %build
-%define Werror_cflags %nil
 %configure2_5x \
 	--enable-sb16=linux \
 	--enable-ne2000 \
@@ -53,9 +51,6 @@ perl -pi -e "s#/usr/local/bochs/latest#%{_datadir}/bochs#g" dlxlinux/bochsrc.txt
 	--enable-smp \
 	--enable-apic \
 	--enable-debugger \
-	--enable-large-pages \
-	--enable-global-pages \
-	--enable-pae \
 	--enable-xsave \
 	--enable-aes \
 	--enable-popcnt \
@@ -65,14 +60,11 @@ perl -pi -e "s#/usr/local/bochs/latest#%{_datadir}/bochs#g" dlxlinux/bochsrc.txt
 	--enable-pcidev \
 	--enable-idle-hack \
 	--enable-repeat-speedups \
-	--enable-icache \
 	--enable-trace-cache \
 	--enable-fast-function-calls \
-	--enable-port-e9-hack \
-	--enable-mtrr \
-	--enable-guest2host-tlb \
 	--enable-alignment-check \
-	--enable-sep
+	--enable-sep \
+	--enable-cpu-level=6
 
 %make
 
