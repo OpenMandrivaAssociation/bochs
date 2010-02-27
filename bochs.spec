@@ -49,6 +49,7 @@ Windows '95, Minix 2.0, and other OS's, all on your workstation.
 	--enable-aes \
 	--enable-popcnt \
 	--enable-usb \
+	--enable-usb-ohci \
 	--enable-acpi \
 	--enable-pci \
 	--enable-pcidev \
@@ -58,7 +59,15 @@ Windows '95, Minix 2.0, and other OS's, all on your workstation.
 	--enable-fast-function-calls \
 	--enable-alignment-check \
 	--enable-sep \
-	--enable-cpu-level=6
+	--enable-cpu-level=6 \
+	--enable-movbe \
+	--enable-monitor-mwait \
+	--enable-1g-pages \
+	--enable-long-phy-address \
+	--enable-a20-pin \
+	--enable-configurable-msrs \
+	--enable-host-specific-asms \
+	--enable-fast-function-calls
 
 %make
 
