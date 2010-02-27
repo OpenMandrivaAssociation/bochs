@@ -8,6 +8,7 @@ URL:		http://bochs.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Patch0:         %{name}-nonet-build.patch
 Patch1:         %{name}-config.patch
+Patch2:		bochs-2.4.2-format-string.patch
 BuildRequires:	X11-devel gtk+2-devel
 BuildRequires:  readline-devel 
 BuildRequires:	byacc
@@ -21,6 +22,7 @@ Windows '95, Minix 2.0, and other OS's, all on your workstation.
 %prep
 %setup -q
 %patch0 -p0 -z .nonet
+%patch2 -p1 -b .format_string~
 
 # remove any references to CVS repository
 find . -type d -name CVS | xargs rm -rf
