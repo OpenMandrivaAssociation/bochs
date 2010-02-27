@@ -79,7 +79,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr (-,root,root)
-%doc README CHANGES COPYING
+%doc README CHANGES
 %doc bochsrc-sample.txt
 %doc docs-html
 #
