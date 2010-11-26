@@ -1,12 +1,12 @@
 Summary:	Bochs Project x86 PC Emulator
 Name:		bochs
-Version:	2.4.2
+Version:	2.4.5
 Release:	%mkrel 1
 License:	LGPLv2+
 Group:		Emulators
 URL:		http://bochs.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-Patch2:		bochs-2.4.2-format-string.patch
+Patch0:		bochs-2.4.5-3dnow-compile-fix.patch
 BuildRequires:	X11-devel gtk+2-devel
 BuildRequires:  readline-devel 
 BuildRequires:	byacc
@@ -19,19 +19,21 @@ Windows '95, Minix 2.0, and other OS's, all on your workstation.
 
 %prep
 %setup -q
-%patch2 -p1 -b .format_string~
+%patch0 -p1 -b .compile~
 
 %build
 %configure2_5x \
+	--enable-x2apic \
+	--enable-compressed-hd \
 	--enable-sb16=linux \
+	--enable-gameport \
 	--enable-ne2000 \
+	--enable-pnic \
 	--enable-cdrom \
 	--enable-vbe \
 	--enable-split-hd \
-	--enable-x86-64 --enable-sse=4 \
-	--enable-sse-extension \
+	--enable-x86-64 \
 	--enable-misaligned-sse \
-	--enable-mmx \
 	--enable-3dnow \
 	--enable-fpu \
 	--enable-all-optimizations \
@@ -43,11 +45,7 @@ Windows '95, Minix 2.0, and other OS's, all on your workstation.
 	--disable-docbook \
 	--enable-disasm \
 	--enable-smp \
-	--enable-apic \
 	--enable-debugger \
-	--enable-xsave \
-	--enable-aes \
-	--enable-popcnt \
 	--enable-usb \
 	--enable-usb-ohci \
 	--enable-acpi \
@@ -58,15 +56,20 @@ Windows '95, Minix 2.0, and other OS's, all on your workstation.
 	--enable-trace-cache \
 	--enable-fast-function-calls \
 	--enable-alignment-check \
-	--enable-sep \
 	--enable-cpu-level=6 \
-	--enable-movbe \
 	--enable-monitor-mwait \
-	--enable-1g-pages \
 	--enable-long-phy-address \
 	--enable-a20-pin \
 	--enable-configurable-msrs \
-	--enable-host-specific-asms
+	--enable-host-specific-asms \
+	--enable-configurable-msrs \
+	--enable-clgd54xx \
+%ifarch x86_64
+	--enable-vmx=2 \
+%else
+	--enable-vmx=1 \
+%endif
+	--enable-raw-serial
 
 %make
 
