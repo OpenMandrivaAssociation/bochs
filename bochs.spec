@@ -1,13 +1,16 @@
 Summary:	Bochs Project x86 PC Emulator
 Name:		bochs
 Version:	2.4.5
-Release:	%mkrel 1
+Release:	%mkrel 2
 License:	LGPLv2+
 Group:		Emulators
 URL:		http://bochs.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Patch0:		bochs-2.4.5-3dnow-compile-fix.patch
-BuildRequires:	X11-devel gtk+2-devel
+Buildrequires:	libx11-devel
+Buildrequires:	libxpm-devel
+BuildRequires:	libalsa-devel
+BuildRequires:	zlib-devel
 BuildRequires:  readline-devel 
 BuildRequires:	byacc
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
