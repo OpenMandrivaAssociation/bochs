@@ -12,6 +12,7 @@ Buildrequires:	libxpm-devel
 BuildRequires:	libalsa-devel
 BuildRequires:	zlib-devel
 BuildRequires:  readline-devel 
+BuildRequires:	gtk+2-devel
 BuildRequires:	byacc
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
