@@ -45,7 +45,7 @@ Windows '95, Minix 2.0, and other OS's, all on your workstation.
 
 %package        debugger
 Summary:        Bochs with builtin debugger
-Group:          Applications/Emulators
+Group:          Emulators
 Requires:       %{name} = %{version}-%{release}
 
 %description    debugger
@@ -54,7 +54,7 @@ Special version of bochs compiled with the builtin debugger.
 
 %package        gdb
 Summary:        Bochs with support for debugging with gdb
-Group:          Applications/Emulators
+Group:          Emulators
 Requires:       %{name} = %{version}-%{release}
 
 %description    gdb
@@ -73,7 +73,7 @@ inside the emulator can be debugged with gdb.
 # packages from getting into the excluded repositories.
 %package	bios
 Summary:        Bochs bios
-Group:          Applications/Emulators
+Group:          Emulators
 BuildArch:      noarch
 Provides:       bochs-bios-data = 2.3.8.1
 Obsoletes:      bochs-bios-data < 2.3.8.1
@@ -86,7 +86,7 @@ It can also be used in other emulators, such as QEMU
 
 %package        devel
 Summary:        Bochs header and source files
-Group:          Applications/Emulators
+Group:          Emulators
 Requires:       %{name} = %{version}-%{release}
 
 %description    devel
