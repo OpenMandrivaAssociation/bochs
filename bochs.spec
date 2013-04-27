@@ -34,7 +34,7 @@ Windows '95, Minix 2.0, and other OS's, all on your workstation.
 %package	debugger
 Summary:	Bochs with builtin debugger
 Group:		Emulators
-Requires	:%{name} = %{version}-%{release}
+Requires:	%{name} = %{version}-%{release}
 
 %description	debugger
 Special version of bochs compiled with the builtin debugger.
@@ -98,8 +98,10 @@ chmod -x `find -name '*.cc' -o -name '*.h' -o -name '*.inc'`
 iconv -f ISO_8859-2 -t UTF8 CHANGES > CHANGES.tmp
 mv CHANGES.tmp CHANGES
 
-
 %build
+CONFIGURE_TOP="$PWD"
+mkdir -p intdebug
+pushd intdebug
 %ifarch %{ix86} x86_64
 ARCH_CONFIGURE_FLAGS=--with-svga
 %endif
@@ -108,38 +110,67 @@ ARCH_CONFIGURE_FLAGS=--with-svga
 # Note2: passing --enable-pcidev will change bochs license from LGPLv2+ to
 # LGPLv2 (and requires a kernel driver to be usefull)
 CONFIGURE_FLAGS=" \
-  --enable-plugins \
-  --enable-ne2000 \
-  --enable-pci \
-  --enable-all-optimizations \
-  --enable-clgd54xx \
-  --enable-sb16=linux \
-  --enable-3dnow
-  --with-x11 \
-  --with-nogui \
-  --with-term \
-  --with-rfb \
-  --with-sdl \
-  --without-wx \
-  --enable-cpu-level=6 \
-  --enable-disasm \
-  --enable-usb \
-  --enable-usb-ohci \
-  $ARCH_CONFIGURE_FLAGS"
+	--enable-shared \
+	--disable-static \
+	--enable-plugins \
+	--enable-ne2000 \
+	--enable-e1000 \
+	--enable-pnic \
+	--enable-pci \
+	--enable-pcidev \
+	--enable-all-optimizations \
+	--enable-repeat-speedups \
+	--enable-fast-function-calls \
+	--enable-handlers-chaining \
+	--enable-configurable-msrs \
+	--enable-clgd54xx \
+	--enable-sb16 \
+	--enable-es1370 \
+	--enable-gameport \
+	--enable-3dnow
+	--enable-long-phy-address \
+	--enable-x86-64 \
+	--enable-a20-pin \
+	--enable-idle-hack \
+	--enable-fpu \
+	--with-x11 \
+	--with-nogui \
+	--with-term \
+	--with-rfb \
+	--with-sdl \
+	--without-wx \
+	--enable-cpu-level=6 \
+	--enable-disasm \
+	--enable-usb \
+	--enable-usb-ohci \
+	--enable-usb-xhci \
+	--enable-svm \
+	--enable-vmx=2 \ 
+	--enable-alignment-check \
+	--enable-monitor-mwait \
+	--enable-avx \
+	--enable-voodoo \
+	--enable-xpm \
+	--enable-raw-serial \
+	$ARCH_CONFIGURE_FLAGS"
 export CXXFLAGS="$RPM_OPT_FLAGS -DPARANOID"
+export LDFLAGS=-L%{_libdir}
 
-%configure2_5x $CONFIGURE_FLAGS --enable-x86-debugger --enable-debugger
+%configure2_5x $CONFIGURE_FLAGS --enable-x86-debugger --enable-debugger	--enable-smp
 %make
-mv bochs bochs-debugger
-make dist-clean
+popd
 
+mkdir -p gdb-stub
+pushd gdb-stub
 %configure2_5x $CONFIGURE_FLAGS --enable-x86-debugger --enable-gdb-stub
 %make
-mv bochs bochs-gdb
-make dist-clean
+popd
 
-%configure2_5x $CONFIGURE_FLAGS
+mkdir -p plain
+pushd plain
+%configure2_5x $CONFIGURE_FLAGS --enable-smp
 %make
+popd
 
 %ifarch %{ix86} x86_64
 cd bios
