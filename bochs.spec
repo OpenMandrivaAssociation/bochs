@@ -1,6 +1,6 @@
 %define _hardened_build 1
 Name:		bochs
-Version:	2.6
+Version:	2.6.1
 Release:	1
 Summary:	Portable x86 PC emulator
 Group:		Emulators
@@ -9,10 +9,7 @@ URL:		http://bochs.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 
 Patch0:		%{name}-0001_bx-qemu.patch
-Patch1:		%{name}-0006_qemu-bios-use-preprocessor-for-pci-link-routing.patch
-Patch2:		%{name}-0007_bios-add-26-pci-slots,-bringing-the-total-to-32.patch
 Patch3:		%{name}-0008_qemu-bios-provide-gpe-_l0x-methods.patch
-Patch4:		%{name}-0009_qemu-bios-pci-hotplug-support.patch
 Patch7:		%{name}-nonet-build.patch
 
 BuildRequires:	pkgconfig(xt) libxpm-devel pkgconfig(sdl) readline-devel byacc
@@ -87,10 +84,7 @@ Header and source files from bochs source.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 %patch3 -p1
-%patch4 -p1
 %patch7 -p0 -z .nonet
 
 # Fix up some man page paths.
