@@ -11,6 +11,7 @@ Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Patch0:		%{name}-0001_bx-qemu.patch
 Patch3:		%{name}-0008_qemu-bios-provide-gpe-_l0x-methods.patch
 Patch7:		%{name}-nonet-build.patch
+Patch8:		bochs-2.6.1-autofoo-fix.patch
 
 BuildRequires:	pkgconfig(xt) libxpm-devel pkgconfig(sdl) readline-devel byacc
 BuildRequires:	docbook-utils
@@ -97,6 +98,7 @@ chmod -x `find -name '*.cc' -o -name '*.h' -o -name '*.inc'`
 # Fix CHANGES encoding
 iconv -f ISO_8859-2 -t UTF8 CHANGES > CHANGES.tmp
 mv CHANGES.tmp CHANGES
+mv configure.{in,ac}
 libtoolize -fiv
 aclocal -Ilibltdl/m4/
 autoconf -f
@@ -173,17 +175,17 @@ mkdir -p plain
 pushd plain
 %configure2_5x $CONFIGURE_FLAGS --enable-smp
 %make
-popd
-
 %ifarch %{ix86} x86_64
 cd bios
-make bios
+%make bios
 cp BIOS-bochs-latest BIOS-bochs-kvm
+cd ..
+popd
 %endif
 
 %install
 rm -rf %{buildroot} _installed-docs
-make install DESTDIR=%{buildroot}
+make -C plain install DESTDIR=%{buildroot} 
 rm -rf %{buildroot}%{_prefix}/share/bochs/VGABIOS*
 ln -s %{_prefix}/share/vgabios/VGABIOS-lgpl-latest.bin %{buildroot}%{_prefix}/share/bochs/VGABIOS-lgpl-latest
 ln -s %{_prefix}/share/vgabios/VGABIOS-lgpl-latest.cirrus.bin %{buildroot}%{_prefix}/share/bochs/VGABIOS-lgpl-latest.cirrus
@@ -192,7 +194,9 @@ ln -s %{_prefix}/share/vgabios/VGABIOS-lgpl-latest.debug.bin %{buildroot}%{_pref
 %ifnarch %{ix86} x86_64
 rm -rf %{buildroot}%{_prefix}/share/bochs/*BIOS*
 %endif
-install -m 755 bochs-debugger bochs-gdb %{buildroot}%{_bindir}
+install -m755 intdebug/bochs -D %{buildroot}%{_bindir}/bochs-debugger
+install -m755 gdb-stub/bochs -D %{buildroot}%{_bindir}/bochs-gdb
+
 mv %{buildroot}%{_docdir}/bochs _installed-docs
 rm %{buildroot}%{_mandir}/man1/bochs-dlx.1*
 
@@ -200,7 +204,7 @@ mkdir -p %{buildroot}%{_prefix}/include/bochs/disasm
 cp -pr disasm/*.h %{buildroot}%{_prefix}/include/bochs/disasm/
 cp -pr disasm/*.cc %{buildroot}%{_prefix}/include/bochs/disasm/
 cp -pr disasm/*.inc %{buildroot}%{_prefix}/include/bochs/disasm/
-cp -pr config.h %{buildroot}%{_prefix}/include/bochs/
+cp -pr plain/config.h %{buildroot}%{_prefix}/include/bochs/
 
 %files
 %doc _installed-docs/* README-*
