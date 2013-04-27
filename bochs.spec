@@ -97,6 +97,9 @@ chmod -x `find -name '*.cc' -o -name '*.h' -o -name '*.inc'`
 # Fix CHANGES encoding
 iconv -f ISO_8859-2 -t UTF8 CHANGES > CHANGES.tmp
 mv CHANGES.tmp CHANGES
+libtoolize -fiv
+aclocal -Ilibltdl/m4/
+autoconf -f
 
 %build
 CONFIGURE_TOP="$PWD"
