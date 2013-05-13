@@ -105,8 +105,6 @@ autoconf -f
 
 %build
 CONFIGURE_TOP="$PWD"
-mkdir -p intdebug
-pushd intdebug
 %ifarch %{ix86} x86_64
 ARCH_CONFIGURE_FLAGS=--with-svga
 %endif
@@ -161,6 +159,8 @@ CONFIGURE_FLAGS=" \
 export CXXFLAGS="$RPM_OPT_FLAGS -DPARANOID"
 export LDFLAGS=-L%{_libdir}
 
+mkdir -p intdebug
+pushd intdebug
 %configure2_5x $CONFIGURE_FLAGS --enable-x86-debugger --enable-debugger	--enable-smp
 %make
 popd
@@ -176,28 +176,26 @@ pushd plain
 %configure2_5x $CONFIGURE_FLAGS --enable-smp
 %make
 %ifarch %{ix86} x86_64
-cd bios
+pushd bios
 %make bios
 cp BIOS-bochs-latest BIOS-bochs-kvm
-cd ..
+popd
 popd
 %endif
 
 %install
-rm -rf %{buildroot} _installed-docs
-make -C plain install DESTDIR=%{buildroot} 
-rm -rf %{buildroot}%{_prefix}/share/bochs/VGABIOS*
+%makeinstall_std -C plain
+rm -r %{buildroot}%{_prefix}/share/bochs/VGABIOS*
 ln -s %{_prefix}/share/vgabios/VGABIOS-lgpl-latest.bin %{buildroot}%{_prefix}/share/bochs/VGABIOS-lgpl-latest
 ln -s %{_prefix}/share/vgabios/VGABIOS-lgpl-latest.cirrus.bin %{buildroot}%{_prefix}/share/bochs/VGABIOS-lgpl-latest.cirrus
 ln -s %{_prefix}/share/vgabios/VGABIOS-lgpl-latest.cirrus.debug.bin %{buildroot}%{_prefix}/share/bochs/VGABIOS-lgpl-latest.cirrus.debug
 ln -s %{_prefix}/share/vgabios/VGABIOS-lgpl-latest.debug.bin %{buildroot}%{_prefix}/share/bochs/VGABIOS-lgpl-latest.debug
 %ifnarch %{ix86} x86_64
-rm -rf %{buildroot}%{_prefix}/share/bochs/*BIOS*
+rm -r %{buildroot}%{_prefix}/share/bochs/*BIOS*
 %endif
 install -m755 intdebug/bochs -D %{buildroot}%{_bindir}/bochs-debugger
 install -m755 gdb-stub/bochs -D %{buildroot}%{_bindir}/bochs-gdb
 
-mv %{buildroot}%{_docdir}/bochs _installed-docs
 rm %{buildroot}%{_mandir}/man1/bochs-dlx.1*
 
 mkdir -p %{buildroot}%{_prefix}/include/bochs/disasm
@@ -207,7 +205,7 @@ cp -pr disasm/*.inc %{buildroot}%{_prefix}/include/bochs/disasm/
 cp -pr plain/config.h %{buildroot}%{_prefix}/include/bochs/
 
 %files
-%doc _installed-docs/* README-*
+%doc %{_docdir}/bochs
 %{_bindir}/bochs
 %{_bindir}/bxcommit
 %{_bindir}/bximage
