@@ -148,7 +148,7 @@ CONFIGURE_FLAGS=" \
 	--enable-usb-ohci \
 	--enable-usb-xhci \
 	--enable-svm \
-	--enable-vmx=2 \ 
+	--enable-vmx=2 \
 	--enable-alignment-check \
 	--enable-monitor-mwait \
 	--enable-avx \
