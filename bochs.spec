@@ -1,6 +1,6 @@
 %define _hardened_build 1
 Name:		bochs
-Version:	2.6.1
+Version:	2.6.2
 Release:	1
 Summary:	Portable x86 PC emulator
 Group:		Emulators
