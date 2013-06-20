@@ -19,7 +19,6 @@ BuildRequires:	docbook-utils
 BuildRequires:	docbook-style-xsl
 BuildRequires:	sgml-common
 BuildRequires:	docbook-dtd41-sgml
-BuildRequires:	gtk2-devel
 %ifarch %{ix86}	x86_64
 BuildRequires:	svgalib-devel
 BuildRequires:	dev86 iasl
