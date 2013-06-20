@@ -14,6 +14,7 @@ Patch7:		%{name}-nonet-build.patch
 Patch8:		bochs-2.6.1-autofoo-fix.patch
 
 BuildRequires:	pkgconfig(xt) libxpm-devel pkgconfig(sdl) readline-devel byacc
+BuildRequires:	pkgconfig(gtk+-2.0)
 BuildRequires:	docbook-utils
 BuildRequires:	docbook-style-xsl
 BuildRequires:	sgml-common
