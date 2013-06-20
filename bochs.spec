@@ -15,6 +15,7 @@ Patch8:		bochs-2.6.1-autofoo-fix.patch
 
 BuildRequires:	pkgconfig(xt) libxpm-devel pkgconfig(sdl) readline-devel byacc
 BuildRequires:	pkgconfig(gtk+-2.0)
+BuildRequires:	libltdl-devel
 BuildRequires:	docbook-utils
 BuildRequires:	docbook-style-xsl
 BuildRequires:	sgml-common
