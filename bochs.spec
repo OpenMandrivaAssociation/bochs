@@ -1,7 +1,7 @@
 %define _hardened_build 1
 Name:		bochs
 Version:	2.6
-Release:	1
+Release:	2
 Summary:	Portable x86 PC emulator
 Group:		Emulators
 License:	LGPLv2+
