@@ -7,6 +7,7 @@ Group:		Emulators
 License:	LGPLv2+
 URL:		http://bochs.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Source100:  bochs.rpmlintrc
 
 Patch0:		%{name}-0001_bx-qemu.patch
 Patch1:		%{name}-0006_qemu-bios-use-preprocessor-for-pci-link-routing.patch
