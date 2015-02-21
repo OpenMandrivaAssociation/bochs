@@ -17,7 +17,7 @@ Patch4:		%{name}-0009_qemu-bios-pci-hotplug-support.patch
 Patch7:		%{name}-nonet-build.patch
 
 BuildRequires:	pkgconfig(xt) 
-BuildRequires:	libxpm-devel 
+BuildRequires:	pkgconfig(xpm)
 BuildRequires:	pkgconfig(sdl) 
 BuildRequires:	readline-devel 
 BuildRequires:	byacc
