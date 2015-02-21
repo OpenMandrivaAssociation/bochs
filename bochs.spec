@@ -62,6 +62,7 @@ Requires	:%{name} = %{version}-%{release}
 Special version of bochs compiled with the builtin debugger.
 
 %files debugger
+%doc _installed-docs/* README-*
 %{_bindir}/bochs-debugger
 
 #------------------------------------------------
@@ -76,6 +77,7 @@ Special version of bochs compiled with a gdb stub so that the software running
 inside the emulator can be debugged with gdb.
 
 %files gdb
+%doc _installed-docs/* README-*
 %{_bindir}/bochs-gdb
 
 #------------------------------------------------
@@ -106,6 +108,7 @@ It can also be used in other emulators, such as QEMU
 
 %ifarch %{ix86} x86_64
 %files bios
+%doc _installed-docs/* README-*
 %{_datadir}/bochs/BIOS*
 %{_datadir}/bochs/VGABIOS*
 %endif
@@ -122,6 +125,7 @@ Header and source files from bochs source.
 
 
 %files devel
+%doc _installed-docs/* README-*
 %{_prefix}/include/bochs/
 
 #------------------------------------------------
