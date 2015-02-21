@@ -1,12 +1,13 @@
 %define _hardened_build 1
 Name:		bochs
 Version:	2.6
-Release:	2
+Release:	%mkrel 3
 Summary:	Portable x86 PC emulator
 Group:		Emulators
 License:	LGPLv2+
 URL:		http://bochs.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Source100:	bochs.rpmlintrc
 
 Patch0:		%{name}-0001_bx-qemu.patch
 Patch1:		%{name}-0006_qemu-bios-use-preprocessor-for-pci-link-routing.patch
@@ -15,15 +16,20 @@ Patch3:		%{name}-0008_qemu-bios-provide-gpe-_l0x-methods.patch
 Patch4:		%{name}-0009_qemu-bios-pci-hotplug-support.patch
 Patch7:		%{name}-nonet-build.patch
 
-BuildRequires:	pkgconfig(xt) libxpm-devel pkgconfig(sdl) readline-devel byacc
+BuildRequires:	pkgconfig(xt) 
+BuildRequires:	pkgconfig(xpm)
+BuildRequires:	pkgconfig(sdl) 
+BuildRequires:	readline-devel 
+BuildRequires:	byacc
 BuildRequires:	docbook-utils
 BuildRequires:	docbook-style-xsl
 BuildRequires:	sgml-common
 BuildRequires:	docbook-dtd41-sgml
-BuildRequires:	gtk2-devel
+BuildRequires:	pkgconfig(gtk+-2.0)
 %ifarch %{ix86}	x86_64
 BuildRequires:	svgalib-devel
-BuildRequires:	dev86 iasl
+BuildRequires:	dev86 
+BuildRequires:	iasl
 %endif
 Requires:	%{name}-bios = %{version}-%{release}
 Requires:	vgabios
@@ -33,7 +39,20 @@ Bochs is a portable x86 PC emulation software package that emulates
 enough of the x86 CPU, related AT hardware, and BIOS to run DOS,
 Windows '95, Minix 2.0, and other OS's, all on your workstation.
 
+%files
+%doc _installed-docs/* README-*
+%{_bindir}/bochs
+%{_bindir}/bxcommit
+%{_bindir}/bximage
+%{_libdir}/bochs/
+%{_mandir}/man1/bochs.1*
+%{_mandir}/man1/bxcommit.1*
+%{_mandir}/man1/bximage.1*
+%{_mandir}/man5/bochsrc.5*
+%dir %{_datadir}/bochs/
+%{_datadir}/bochs/keymaps/
 
+#------------------------------------------------
 %package	debugger
 Summary:	Bochs with builtin debugger
 Group:		Emulators
@@ -42,6 +61,11 @@ Requires	:%{name} = %{version}-%{release}
 %description	debugger
 Special version of bochs compiled with the builtin debugger.
 
+%files debugger
+%doc _installed-docs/* README-*
+%{_bindir}/bochs-debugger
+
+#------------------------------------------------
 
 %package	gdb
 Summary:	Bochs with support for debugging with gdb
@@ -52,6 +76,11 @@ Requires:	%{name} = %{version}-%{release}
 Special version of bochs compiled with a gdb stub so that the software running
 inside the emulator can be debugged with gdb.
 
+%files gdb
+%doc _installed-docs/* README-*
+%{_bindir}/bochs-gdb
+
+#------------------------------------------------
 %ifarch %{ix86} x86_64
 # building firmwares are quite tricky, because they often have to be built on
 # their native architecture (or in a cross-capable compiler, that we lack in
@@ -76,6 +105,15 @@ provided by the Bochs project.
 It can also be used in other emulators, such as QEMU
 %endif
 
+
+%ifarch %{ix86} x86_64
+%files bios
+%doc _installed-docs/* README-*
+%{_datadir}/bochs/BIOS*
+%{_datadir}/bochs/VGABIOS*
+%endif
+#------------------------------------------------
+
 %package	devel
 Summary:	Bochs header and source files
 Group:		Emulators
@@ -83,6 +121,14 @@ Requires:	%{name} = %{version}-%{release}
 
 %description	devel
 Header and source files from bochs source.
+
+
+
+%files devel
+%doc _installed-docs/* README-*
+%{_prefix}/include/bochs/
+
+#------------------------------------------------
 
 %prep
 %setup -q
@@ -174,30 +220,9 @@ cp -pr disasm/*.cc %{buildroot}%{_prefix}/include/bochs/disasm/
 cp -pr disasm/*.inc %{buildroot}%{_prefix}/include/bochs/disasm/
 cp -pr config.h %{buildroot}%{_prefix}/include/bochs/
 
-%files
-%doc _installed-docs/* README-*
-%{_bindir}/bochs
-%{_bindir}/bxcommit
-%{_bindir}/bximage
-%{_libdir}/bochs/
-%{_mandir}/man1/bochs.1*
-%{_mandir}/man1/bxcommit.1*
-%{_mandir}/man1/bximage.1*
-%{_mandir}/man5/bochsrc.5*
-%dir %{_datadir}/bochs/
-%{_datadir}/bochs/keymaps/
 
-%ifarch %{ix86} x86_64
-%files bios
-%{_datadir}/bochs/BIOS*
-%{_datadir}/bochs/VGABIOS*
-%endif
 
-%files debugger
-%{_bindir}/bochs-debugger
 
-%files gdb
-%{_bindir}/bochs-gdb
 
-%files devel
-%{_prefix}/include/bochs/
+
+
