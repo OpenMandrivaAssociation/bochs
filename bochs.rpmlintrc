@@ -1,0 +1,8 @@
+addFlter("E: library-not-linked-against-libc")
+addFlter("E: devel-file-in-non-devel-package")
+addFlter("E: no-dependency-on")
+addFlter("E: shared-lib-without-dependency-information")
+addFlter("W: dangling-symlink")
+addFlter("W: only-non-binary-in-usr-lib")
+addFlter("W: not-standard-release-extension")
+addFlter("W: symlink-should-be-relative")

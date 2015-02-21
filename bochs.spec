@@ -1,13 +1,13 @@
 %define _hardened_build 1
 Name:		bochs
 Version:	2.6
-Release:	2
+Release:	%mkrel 3
 Summary:	Portable x86 PC emulator
 Group:		Emulators
 License:	LGPLv2+
 URL:		http://bochs.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-Source100:  bochs.rpmlintrc
+Source100:	bochs.rpmlintrc
 
 Patch0:		%{name}-0001_bx-qemu.patch
 Patch1:		%{name}-0006_qemu-bios-use-preprocessor-for-pci-link-routing.patch
