@@ -7,22 +7,30 @@ Group:		Emulators
 License:	LGPLv2+
 URL:		http://bochs.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Source100:	bochs.rpmlintrc
 
 Patch0:		%{name}-0001_bx-qemu.patch
+Patch1:		%{name}-0006_qemu-bios-use-preprocessor-for-pci-link-routing.patch
+Patch2:		%{name}-0007_bios-add-26-pci-slots,-bringing-the-total-to-32.patch
 Patch3:		%{name}-0008_qemu-bios-provide-gpe-_l0x-methods.patch
+Patch4:               %{name}-0009_qemu-bios-pci-hotplug-support.patch
 Patch7:		%{name}-nonet-build.patch
 Patch8:		bochs-2.6.1-autofoo-fix.patch
 
-BuildRequires:	pkgconfig(xt) libxpm-devel pkgconfig(sdl) readline-devel byacc
-BuildRequires:	pkgconfig(gtk+-2.0)
-BuildRequires:	libltdl-devel
+BuildRequires:	pkgconfig(xt) 
+BuildRequires:	pkgconfig(xpm)
+BuildRequires:	pkgconfig(sdl) 
+BuildRequires:	readline-devel 
+BuildRequires:	byacc
 BuildRequires:	docbook-utils
 BuildRequires:	docbook-style-xsl
 BuildRequires:	sgml-common
 BuildRequires:	docbook-dtd41-sgml
+BuildRequires:	pkgconfig(gtk+-2.0)
 %ifarch %{ix86}	x86_64
 BuildRequires:	svgalib-devel
-BuildRequires:	dev86 iasl
+BuildRequires:	dev86 
+BuildRequires:	iasl
 %endif
 Requires:	%{name}-bios = %{version}-%{release}
 Requires:	vgabios
@@ -32,7 +40,6 @@ Bochs is a portable x86 PC emulation software package that emulates
 enough of the x86 CPU, related AT hardware, and BIOS to run DOS,
 Windows '95, Minix 2.0, and other OS's, all on your workstation.
 
-
 %package	debugger
 Summary:	Bochs with builtin debugger
 Group:		Emulators
@@ -40,7 +47,6 @@ Requires:	%{name} = %{version}-%{release}
 
 %description	debugger
 Special version of bochs compiled with the builtin debugger.
-
 
 %package	gdb
 Summary:	Bochs with support for debugging with gdb
@@ -68,7 +74,6 @@ BuildArch:	noarch
 Provides:	bochs-bios-data = 2.3.8.1
 Obsoletes:	bochs-bios-data < 2.3.8.1
 
-
 %description	bios
 Bochs BIOS is a free implementation of a x86 BIOS
 provided by the Bochs project.
@@ -86,8 +91,13 @@ Header and source files from bochs source.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 %patch3 -p1
-%patch7 -p0 -z .nonet
+%patch4 -p1
+%patch7 -p0 -z .nonet~
+%patch8 -p1 -b .autofoo~
+autoreconf -fiv
 
 # Fix up some man page paths.
 sed -i \
@@ -99,10 +109,6 @@ chmod -x `find -name '*.cc' -o -name '*.h' -o -name '*.inc'`
 # Fix CHANGES encoding
 iconv -f ISO_8859-2 -t UTF8 CHANGES > CHANGES.tmp
 mv CHANGES.tmp CHANGES
-mv configure.{in,ac}
-libtoolize -fiv
-aclocal -Ilibltdl/m4/
-autoconf -f
 
 %build
 CONFIGURE_TOP="$PWD"
@@ -218,17 +224,17 @@ cp -pr plain/config.h %{buildroot}%{_prefix}/include/bochs/
 %dir %{_datadir}/bochs/
 %{_datadir}/bochs/keymaps/
 
+%files debugger
+%{_bindir}/bochs-debugger
+
+%files devel
+%{_prefix}/include/bochs/
+
 %ifarch %{ix86} x86_64
 %files bios
 %{_datadir}/bochs/BIOS*
 %{_datadir}/bochs/VGABIOS*
 %endif
 
-%files debugger
-%{_bindir}/bochs-debugger
-
 %files gdb
 %{_bindir}/bochs-gdb
-
-%files devel
-%{_prefix}/include/bochs/
