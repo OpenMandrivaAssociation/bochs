@@ -136,6 +136,7 @@ CONFIGURE_FLAGS=" \
 	--enable-pcidev \
 	--enable-all-optimizations \
 	--enable-repeat-speedups \
+	--enable-trace-linking \
 	--enable-fast-function-calls \
 	--enable-handlers-chaining \
 	--enable-configurable-msrs \
