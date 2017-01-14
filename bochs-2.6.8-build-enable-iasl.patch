@@ -1,0 +1,25 @@
+diff -up bochs-2.6.8/bios/Makefile.in.iasl~ bochs-2.6.8/bios/Makefile.in
+--- bochs-2.6.8/bios/Makefile.in.iasl~	2017-01-14 01:47:42.403562600 +0100
++++ bochs-2.6.8/bios/Makefile.in	2017-01-14 01:48:35.879367991 +0100
+@@ -56,6 +56,7 @@ bios: biossums BIOS-bochs-latest BIOS-bo
+ 
+ clean:
+ 	@RMCOMMAND@ *.o *.a *.s _rombios*_.c rombios*.txt rombios*.sym
++	@RMCOMMAND@ acpi-dsdt.hex acpi-dsdt.aml
+ 	@RMCOMMAND@ usage biossums rombios16.bin
+ 	@RMCOMMAND@ rombios32.bin rombios32.out
+ 
+@@ -97,13 +98,11 @@ rombios32.out: rombios32start.o rombios3
+ rombios32.o: rombios32.c acpi-dsdt.hex rombios.h
+ 	$(GCC32) -O2 -Wall -c -o $@ $<
+ 
+-ifeq ("1", "0")
+ acpi-dsdt.hex: acpi-dsdt.dsl
+ 	cpp -P $< $<.i
+ 	iasl -tc -p $@ $<.i
+ 	rm $<.i
+ 	sed -i -e's/^unsigned/const unsigned/' $@
+-endif
+ 
+ rombios32start.o: rombios32start.S
+ 	$(GCC32) -c -o $@ $<

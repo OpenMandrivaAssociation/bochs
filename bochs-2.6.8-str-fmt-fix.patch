@@ -1,0 +1,16 @@
+diff -up bochs-2.6.8/configure.in.autofoo~ bochs-2.6.8/configure.in.autofoo
+diff -up bochs-2.6.8/iodev/network/slirp/slirp.cc~ bochs-2.6.8/iodev/network/slirp/slirp.cc
+--- bochs-2.6.8/iodev/network/slirp/slirp.cc~	2014-06-04 21:46:21.333317000 +0200
++++ bochs-2.6.8/iodev/network/slirp/slirp.cc	2017-01-14 01:07:10.293671208 +0100
+@@ -928,7 +928,7 @@ void slirp_socket_recv(Slirp *slirp, str
+ 
+ void slirp_warning(Slirp *slirp, const char *msg)
+ {
+-    BX_ERROR((msg));
++    BX_ERROR(("%s", msg));
+ }
+ 
+ #endif
+diff -up bochs-2.6.8/iodev/network/slirp/slirp.cc.str_fmt~ bochs-2.6.8/iodev/network/slirp/slirp.cc.str_fmt
+diff -up bochs-2.6.8/iodev/network/slirp/.slirp.cc.un~ bochs-2.6.8/iodev/network/slirp/.slirp.cc.un
+diff -up bochs-2.6.8/Makefile.in.nonet~ bochs-2.6.8/Makefile.in.nonet
