@@ -1,0 +1,80 @@
+diff -up bochs-2.6.8/bios/Makefile.in.qemu_bios~ bochs-2.6.8/bios/Makefile.in
+--- bochs-2.6.8/bios/Makefile.in.qemu_bios~	2017-01-14 01:55:31.216641567 +0100
++++ bochs-2.6.8/bios/Makefile.in	2017-01-14 01:57:06.536176051 +0100
+@@ -52,19 +52,22 @@ BIOS_BUILD_DATE = "-DBIOS_BUILD_DATE=\"$
+ 	$(CXX) -c $(BX_INCDIRS) $(CXXFLAGS) $(LOCAL_CXXFLAGS) @CXXFP@$< @OFP@$@
+ 
+ 
+-bios: biossums BIOS-bochs-latest BIOS-bochs-legacy
++bios: biossums BIOS-bochs-latest BIOS-bochs-legacy BIOS-qemu-latest
+ 
+ clean:
+ 	@RMCOMMAND@ *.o *.a *.s _rombios*_.c rombios*.txt rombios*.sym
+ 	@RMCOMMAND@ acpi-dsdt.hex acpi-dsdt.aml
+-	@RMCOMMAND@ usage biossums rombios16.bin
++	@RMCOMMAND@ usage biossums
++	@RMCOMMAND@ rombios16.bin rombios16-qemu.bin
+ 	@RMCOMMAND@ rombios32.bin rombios32.out
++	@RMCOMMAND@ rombios32-qemu.bin rombios32-qemu.out
+ 
+ dist-clean: clean
+ 	@RMCOMMAND@ Makefile
+ 
+ bios-clean:
+ 	@RMCOMMAND@ BIOS-bochs-*
++	@RMCOMMAND@ BIOS-qemu-*
+ 
+ BIOS-bochs-legacy: rombios.c apmbios.S biossums rombios.h
+ 	$(GCC32) $(BIOS_BUILD_DATE) -DLEGACY -E -P $< > _rombiosl_.c
+@@ -76,6 +79,15 @@ BIOS-bochs-legacy: rombios.c apmbios.S b
+ 	./biossums $@
+ 	@RMCOMMAND@ _rombiosl_.s
+ 
++rombios16-qemu.bin: rombios.c apmbios.S biossums rombios.h
++	$(GCC32) $(BIOS_BUILD_DATE) -DBX_QEMU -E -P $< > _rombiosq_.c
++	$(BCC) -o rombiosq.s -C-c -D__i86__ -0 -S _rombiosq_.c
++	sed -e 's/^\.text//' -e 's/^\.data//' rombiosq.s > _rombiosq_.s
++	$(AS86) _rombiosq_.s -b $@.tmp.bin -u- -w- -g -0 -j -O -l rombiosq.txt
++	-perl ${srcdir}/makesym.perl < rombiosq.txt > rombiosq.sym
++	mv $@.tmp.bin $@
++	./biossums $@
++	@RMCOMMAND@ _rombiosq_.s
+ 
+ rombios16.bin: rombios.c apmbios.S biossums rombios.h
+ 	$(GCC32) $(BIOS_BUILD_DATE) -E -P $< > _rombios_.c
+@@ -87,17 +99,26 @@ rombios16.bin: rombios.c apmbios.S bioss
+ 	./biossums rombios16.bin
+ 	@RMCOMMAND@ _rombios_.s
+ 
+-
+ rombios32.bin: rombios32.out rombios.h
+ 	objcopy -O binary $< $@
+ 	./biossums -pad $@
+ 
++rombios32-qemu.bin: rombios32-qemu.out rombios.h
++	objcopy -O binary $< $@
++	./biossums -pad $@
++
+ rombios32.out: rombios32start.o rombios32.o rombios32.ld
+ 	ld -o $@ -T $(srcdir)/rombios32.ld rombios32start.o rombios32.o
+ 
++rombios32-qemu.out: rombios32start.o rombios32-qemu.o rombios32.ld
++	ld -o $@ -T $(srcdir)/rombios32.ld rombios32start.o rombios32-qemu.o
++
+ rombios32.o: rombios32.c acpi-dsdt.hex rombios.h
+ 	$(GCC32) -O2 -Wall -c -o $@ $<
+ 
++rombios32-qemu.o: rombios32.c acpi-dsdt.hex rombios.h
++	$(GCC32) -DBX_QEMU -O2 -Wall -c -o $@ $<
++
+ acpi-dsdt.hex: acpi-dsdt.dsl
+ 	cpp -P $< $<.i
+ 	iasl -tc -p $@ $<.i
+@@ -110,4 +131,7 @@ rombios32start.o: rombios32start.S
+ BIOS-bochs-latest: rombios16.bin rombios32.bin
+ 	cat rombios32.bin rombios16.bin > $@
+ 
++BIOS-qemu-latest: rombios16-qemu.bin rombios32-qemu.bin
++	cat rombios32-qemu.bin rombios16-qemu.bin > $@
++
+ biossums: biossums.o
