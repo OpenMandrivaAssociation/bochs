@@ -13,18 +13,16 @@ Patch0:		%{name}-0001_bx-qemu.patch
 Patch3:		%{name}-0008_qemu-bios-provide-gpe-_l0x-methods.patch
 Patch4:		%{name}-0009_qemu-bios-pci-hotplug-support.patch
 Patch7:		%{name}-nonet-build.patch
-Patch8:		bochs-2.6.8-autofoo-fix.patch
 Patch9:		bochs-2.6.8-str-fmt-fix.patch
 Patch10:	bochs-2.6.8-support-building-under-recent-linux.patch
 Patch11:	0011_read-additional-acpi-tables-from-a-vm.patch
 Patch12:	0012-load-smbios-entries-and-files-from-qemu.patch
 Patch13:	bochs-2.6.8-build-enable-iasl.patch
-Patch14:	bochs-2.6.8-build-use-system-libltdl.patch
 Patch15:	bochs-2.6.8-build-qemu-bios.patch
 
 BuildRequires:	pkgconfig(xt) 
 BuildRequires:	pkgconfig(xpm)
-BuildRequires:	pkgconfig(sdl) 
+BuildRequires:	pkgconfig(sdl2)
 BuildRequires:	readline-devel 
 BuildRequires:	byacc
 BuildRequires:	docbook-utils
@@ -99,13 +97,11 @@ Header and source files from bochs source.
 %patch3 -p1
 %patch4 -p1
 %patch7 -p0 -z .nonet~
-#patch8 -p1 -b .autofoo~
 %patch9 -p1 -b .str_fmt~
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1 -b .iasl~
-#patch14 -p1 -b .ltdl~
 %patch15 -p1
 autoconf -f
 
@@ -157,7 +153,7 @@ CONFIGURE_FLAGS=" \
 	--with-nogui \
 	--with-term \
 	--with-rfb \
-	--with-sdl \
+	--with-sdl2 \
 	--without-wx \
 	--enable-cpu-level=6 \
 	--enable-disasm \
