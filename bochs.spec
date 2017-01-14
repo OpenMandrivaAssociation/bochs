@@ -1,4 +1,7 @@
 %define _hardened_build 1
+%define __cc	gcc
+%define	__cxx	g++
+
 Name:		bochs
 Version:	2.6.8
 Release:	1
@@ -19,6 +22,7 @@ Patch11:	0011_read-additional-acpi-tables-from-a-vm.patch
 Patch12:	0012-load-smbios-entries-and-files-from-qemu.patch
 Patch13:	bochs-2.6.8-build-enable-iasl.patch
 Patch15:	bochs-2.6.8-build-qemu-bios.patch
+Patch16:	bochs-2.6.8-fix-load-order-of-usb-plugins.patch
 
 BuildRequires:	pkgconfig(xt) 
 BuildRequires:	pkgconfig(xpm)
@@ -103,6 +107,7 @@ Header and source files from bochs source.
 %patch12 -p1
 %patch13 -p1 -b .iasl~
 %patch15 -p1
+%patch16 -p1
 autoconf -f
 
 # Fix up some man page paths.
