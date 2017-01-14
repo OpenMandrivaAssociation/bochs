@@ -1,0 +1,39 @@
+diff -up bochs-2.6.8/configure.in.autofoo~ bochs-2.6.8/configure.in
+--- bochs-2.6.8/configure.in.autofoo~	2015-05-03 08:36:30.987977000 +0200
++++ bochs-2.6.8/configure.in	2017-01-14 01:13:41.431995658 +0100
+@@ -1,11 +1,13 @@
+ dnl // Process this file with autoconf to produce a configure script.
+ 
+-AC_PREREQ(2.50)
+-AC_INIT(bochs.h)
++AC_PREREQ(2.69)
++AC_INIT([bochs], [2.6.8])
+ AC_REVISION([[$Id: configure.in 12737 2015-05-03 06:36:30Z vruppert $]])
+-AC_CONFIG_HEADER(config.h)
+-AC_CONFIG_HEADER(ltdlconf.h)
+-
++AC_CONFIG_FILES([config.h])
++AC_CONFIG_FILES([ltdlconf.h])
++AC_REQUIRE_AUX_FILE([install-sh])
++AC_REQUIRE_AUX_FILE([mkinstalldirs])
++ 
+ dnl // Put Bochs version information right here so that it gets substituted
+ dnl // into all the right places.
+ VERSION="2.6.8"
+@@ -20,6 +22,7 @@ changequote(<<, >>)
+ changequote([, ])
+ 
+ dnl Detect host and target
++AC_CANONICAL_BUILD
+ AC_CANONICAL_HOST
+ AC_CANONICAL_TARGET
+ 
+@@ -119,7 +122,7 @@ if test "$NO_LT" != 1; then
+   dnl Check for dlopen support
+   AC_LIBTOOL_DLOPEN
+   dnl Configure libtool
+-  AC_PROG_LIBTOOL
++  LT_INIT
+   dnl Configure the ltdl library.  This must go after AC_PROG_LIBTOOL or
+   dnl else it disables shared libraries somehow.
+   AC_LIB_LTDL

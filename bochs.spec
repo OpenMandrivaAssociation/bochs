@@ -1,6 +1,6 @@
 %define _hardened_build 1
 Name:		bochs
-Version:	2.6.2
+Version:	2.6.8
 Release:	1
 Summary:	Portable x86 PC emulator
 Group:		Emulators
@@ -10,12 +10,17 @@ Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source100:	bochs.rpmlintrc
 
 Patch0:		%{name}-0001_bx-qemu.patch
-Patch1:		%{name}-0006_qemu-bios-use-preprocessor-for-pci-link-routing.patch
-Patch2:		%{name}-0007_bios-add-26-pci-slots,-bringing-the-total-to-32.patch
 Patch3:		%{name}-0008_qemu-bios-provide-gpe-_l0x-methods.patch
-Patch4:               %{name}-0009_qemu-bios-pci-hotplug-support.patch
+Patch4:		%{name}-0009_qemu-bios-pci-hotplug-support.patch
 Patch7:		%{name}-nonet-build.patch
-Patch8:		bochs-2.6.1-autofoo-fix.patch
+Patch8:		bochs-2.6.8-autofoo-fix.patch
+Patch9:		bochs-2.6.8-str-fmt-fix.patch
+Patch10:	bochs-2.6.8-support-building-under-recent-linux.patch
+Patch11:	0011_read-additional-acpi-tables-from-a-vm.patch
+Patch12:	0012-load-smbios-entries-and-files-from-qemu.patch
+Patch13:	bochs-2.6.8-build-enable-iasl.patch
+Patch14:	bochs-2.6.8-build-use-system-libltdl.patch
+Patch15:	bochs-2.6.8-build-qemu-bios.patch
 
 BuildRequires:	pkgconfig(xt) 
 BuildRequires:	pkgconfig(xpm)
@@ -91,13 +96,18 @@ Header and source files from bochs source.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch7 -p0 -z .nonet~
-%patch8 -p1 -b .autofoo~
-autoreconf -fiv
+#patch8 -p1 -b .autofoo~
+%patch9 -p1 -b .str_fmt~
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1 -b .iasl~
+#patch14 -p1 -b .ltdl~
+%patch15 -p1
+autoconf -f
 
 # Fix up some man page paths.
 sed -i \
@@ -169,19 +179,23 @@ export LDFLAGS=-L%{_libdir}
 mkdir -p intdebug
 pushd intdebug
 %configure2_5x $CONFIGURE_FLAGS --enable-x86-debugger --enable-debugger	--enable-smp
+ln -sf /usr/bin/libtool .
 %make
 popd
 
 mkdir -p gdb-stub
 pushd gdb-stub
 %configure2_5x $CONFIGURE_FLAGS --enable-x86-debugger --enable-gdb-stub
+ln -sf /usr/bin/libtool .
 %make
 popd
 
 mkdir -p plain
 pushd plain
 %configure2_5x $CONFIGURE_FLAGS --enable-smp
+ln -sf /usr/bin/libtool .
 %make
+
 %ifarch %{ix86} x86_64
 pushd bios
 %make bios
@@ -214,11 +228,11 @@ cp -pr plain/config.h %{buildroot}%{_prefix}/include/bochs/
 %files
 %doc %{_docdir}/bochs
 %{_bindir}/bochs
-%{_bindir}/bxcommit
+#%{_bindir}/bxcommit
 %{_bindir}/bximage
 %{_libdir}/bochs/
 %{_mandir}/man1/bochs.1*
-%{_mandir}/man1/bxcommit.1*
+#%{_mandir}/man1/bxcommit.1*
 %{_mandir}/man1/bximage.1*
 %{_mandir}/man5/bochsrc.5*
 %dir %{_datadir}/bochs/
@@ -232,8 +246,10 @@ cp -pr plain/config.h %{buildroot}%{_prefix}/include/bochs/
 
 %ifarch %{ix86} x86_64
 %files bios
+%doc %{_datadir}/bochs/SeaBIOS-README
 %{_datadir}/bochs/BIOS*
 %{_datadir}/bochs/VGABIOS*
+%{_datadir}/bochs/bios.bin*
 %endif
 
 %files gdb
