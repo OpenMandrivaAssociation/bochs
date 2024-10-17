@@ -8,7 +8,7 @@ Release:	1
 Summary:	Portable x86 PC emulator
 Group:		Emulators
 License:	LGPLv2+
-URL:		http://bochs.sourceforge.net/
+URL:		https://bochs.sourceforge.net/
 Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source100:	bochs.rpmlintrc
 
