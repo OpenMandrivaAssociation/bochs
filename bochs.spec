@@ -24,6 +24,11 @@ Patch13:	bochs-2.6.8-build-enable-iasl.patch
 Patch15:	bochs-2.6.8-build-qemu-bios.patch
 Patch16:	bochs-2.6.8-fix-load-order-of-usb-plugins.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	pkgconfig(xt) 
 BuildRequires:	pkgconfig(xpm)
 BuildRequires:	pkgconfig(sdl2)
